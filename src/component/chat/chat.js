@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, InputItem, NavBar, Icon } from 'antd-mobile'
+import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
 import { getChatId } from '../../untils'
@@ -10,8 +10,10 @@ class Chat extends React.Component {
         super(props)
         this.state = {
             text: '',
-            msg: []
+            msg: [],
+            showEmoji: false
         }
+        this.emojiHandle = this.emojiHandle.bind(this)
     }
     componentDidMount() {
         if (!this.props.chat.chartmsg.length) {
@@ -26,8 +28,19 @@ class Chat extends React.Component {
         const msg = this.state.text
         this.props.sendMsg(from, to, msg)
     }
+    emojiHandle() {
+        this.setState({ showEmoji: !this.state.showEmoji })
+        // 解决宫格只显示一行的问题
+        // 异步为window分发一个resize事件才能完整显示
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'))
+        }, 0)
+
+    }
     render() {
-        const emojiIcon = '😃 🍇 🍉 🍅 🥥 🍉 🍊 🍋 🍌🍍 🥭 🍐 🍑 🍒 🍽️ 🍴 🥄 '
+
+        const emoji = '😃 🍇 🍉 🍅 🥥 🍉 🍊 🍋 🍌🍍 🥭 🍐 🍑 🍒 🍽️ 🍴 🥄 🙈 💫 💦 🦍 🐕 🐺 👶 👼 🤶 🧝‍♂️ 🧀 🍖 🍗 🥩 🥓 🍔 🍟 🍕 🌭 🥪 🌮 🌯 🫔 🥙 🧆 🥚 🍳 🥘 🍲 🫕 🥣 🥗 🍿 🧈  🥫 🍱 🍘 🍙 🍚 🍛 🍜 🍝 🍠 🍢 🍣 🍤 🍥 🥮 🍡 🥟 🥠 🥡 🦪 🍦 🍧 🍨'
+        const emojiIcon = emoji.split(' ').filter(v => v).map(v => ({ text: v }))
         const userid = this.props.match.params.user
         const users = this.props.chat.users
         const Item = List.Item
@@ -63,12 +76,14 @@ class Chat extends React.Component {
                             onChange={v => { this.setState({ text: v }) }}
                             extra={
                                 <div>
-                                    <span onClick={() => { console.log(2222); }} style={{ marginRight: 15 }}>😃</span>
+                                    <span onClick={() => this.emojiHandle()} style={{ marginRight: 15 }}>😃</span>
                                     <span onClick={() => this.handleSubmit()}>发送</span>
                                 </div>
                             }
                         ></InputItem>
                     </List>
+                    {this.state.showEmoji ? <Grid onClick={_el => this.setState({ text: this.state.text + _el.text })} data={emojiIcon} hasLine={false} isCarousel columnNum={9} carouselMaxRow={4}></Grid> : null}
+
                 </div>
             </div>
         )
