@@ -1,10 +1,11 @@
 import axios from 'axios'
 
 import io from 'socket.io-client'
-const scoket = io('ws://10.0.0.33:9093')
+const scoket = io('ws://10.0.0.51:9093')
 
 const MSG_LIST = 'MSG_LIST'
 const MSC_RECV = 'MSC_RECV'
+const READ_MSG = 'READ_MSG'
 
 const initState = {
     chartmsg: [],
@@ -19,6 +20,8 @@ export function chat(state = initState, action) {
         case MSC_RECV:
             const num = action.playload.to === action.userid ? 1 : 0
             return { ...state, chartmsg: [...state.chartmsg, action.playload], unread: state.unread + num }
+        case READ_MSG:
+            return { ...state, chartmsg: state.chartmsg.map(v => ({ ...v, read: true })), unread: state.unread - action.playload.num }
         default:
             return state
     }
@@ -54,6 +57,20 @@ export function getMsgList() {
             if (res.status === 200 && res.data.code === 0) {
                 const userid = getState().user._id
                 dispatch(msgList(res.data.msgs, res.data.users, userid))
+            }
+        })
+    }
+}
+
+function redmsg(from, userid, num) {
+    return { type: READ_MSG, playload: { from, userid, num } }
+}
+export function redMsg(from) {
+    return (dispatch, getState) => {
+        axios.post('/user/redmsg', { from }).then(res => {
+            const userid = getState().user._id
+            if (res.status === 200 && res.data.code === 0) {
+                dispatch(redmsg({ userid, from, num: res.data.num }))
             }
         })
     }

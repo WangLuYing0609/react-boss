@@ -44,6 +44,7 @@ code {
   bottom: 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  z-index: 3
 }
 
 #chat-page .chat-me .am-list-content {

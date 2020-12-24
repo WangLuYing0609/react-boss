@@ -89,6 +89,24 @@ Router.get('/info', (req, res) => {
     if (doc) return res.json({ code: 0, data: doc })
   })
 })
+
+
+Router.post('/redmsg', (req, res) => {
+  const userid = req.cookies.userid
+  const { from } = req.body
+  Chat.update(
+    { from, to: userid },
+    { '$set': { read: true } },
+    { multi: true },//多行修改
+    (err, doc) => {
+      console.log(doc);
+      if (!err) {
+        return res.json({ code: 0, num: doc.nModified })
+      }
+      return res.json({ code: 0, text: '修改失败' })
+    })
+
+})
 function md5Pwd(pwd) {
   const salt = 'imooc-WangLuYing0609~!@'
   return untils.md5(untils.md5(salt + pwd))

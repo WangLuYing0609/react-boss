@@ -1,9 +1,9 @@
 import React from 'react'
 import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
-import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux'
+import { getMsgList, sendMsg, recvMsg, redMsg } from '../../redux/chat.redux'
 import { getChatId } from '../../untils'
-@connect(state => state, { getMsgList, sendMsg, recvMsg })
+@connect(state => state, { getMsgList, sendMsg, recvMsg, redMsg })
 
 class Chat extends React.Component {
     constructor(props) {
@@ -21,12 +21,15 @@ class Chat extends React.Component {
             this.props.recvMsg()
         }
     }
+    componentWillUnmount() {
+        this.props.redMsg(this.props.match.params.user)
+    }
     handleSubmit() {
-        this.setState({ text: '' })
         const from = this.props.user._id
         const to = this.props.match.params.user
         const msg = this.state.text
         this.props.sendMsg(from, to, msg)
+        this.setState({ text: '' })
     }
     emojiHandle() {
         this.setState({ showEmoji: !this.state.showEmoji })
