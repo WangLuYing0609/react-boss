@@ -21,7 +21,9 @@ export function chat(state = initState, action) {
             const num = action.playload.to === action.userid ? 1 : 0
             return { ...state, chartmsg: [...state.chartmsg, action.playload], unread: state.unread + num }
         case READ_MSG:
-            return { ...state, chartmsg: state.chartmsg.map(v => ({ ...v, read: true })), unread: state.unread - action.playload.num }
+            // 清除对应未读数据
+            const { number, from } = action.playload
+            return { ...state, chartmsg: state.chartmsg.map(v => ({ ...v, read: from === v.from ? true : v.read })), unread: state.unread - number }
         default:
             return state
     }

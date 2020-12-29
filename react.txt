@@ -1,0 +1,47 @@
+  React原理
+    1、虚拟dom
+        dom树平级对比，避免跨层级操作元素
+        tree diff ：对同一父节点下的所有字节点进行比较，发现节点不存在就会删除该节点，不进行进一步比较
+        component diff ：如果不是同一类型组件会将该组件判断为dirty component，从而替换整个组件下的字节点
+        element diff ：INSERT_MARKUP(插入),MOVE_EXISTING(移动),REMOVE_NODE(删除)
+    2、生命周期
+        初始化阶段
+            super(props)调用constructor，也将父组件的props注入子组件(props只读，state可变)
+            constructor是做一些初始化工作的。
+        挂载阶段
+            componentWillMount：挂载到DOM前，只会调用一次，在该周期中调用setState不会引起组件重新渲染。
+            render：return一个React元素，不负责渲染，由React自身根据元素渲染页面。
+            componentDidMount：组件挂载到Dom后调用，只调用一次
+        更新阶段
+            1)、父组件重新render
+                a、父组件重新render，子组件就会重新渲染，无论props是否有变化可以通过shouldComponentUpdate方法优化
+                    eg:shouldComponentUpdate(nextprops){
+                            //  判断条件  return false
+                        }
+                b、在componentWillReceviceProps，把props变成state(调用setState将不会引起二次渲染)
+                    eg:componentWillReviceProps(nextprops){
+                        //判断条件  用this.setState
+                    }
+            2)、forceUpdate
+                调用forceUpdate，生命周期将跳过shouldcompoentUpdate，直接调用render
+    3、setState的实现
+        异步更新组件的状态，每次修改会放到队列中，
+        setState执行完成后会执行render()
+        不要在render中使用setState
+    4、context
+        1)、connect 是负责连接组件，给到redux里的数据放到组件的属性中  
+            负责接受一个组件，把state里的一些数据放到组件的属性里
+            数据变化的时候能够通知组件
+        Previder 把store放到context里，所有的子元素可以直接取到redux中的数据和方法
+        需要进行数据校验
+
+        安装prop-types
+        在组件中使用需要规定变量的类型
+        static contextType={
+            ueser:propTyps.string
+        }
+    5、中间件(middleware)
+        传递多个中间件用compose合并起来
+        
+
+
