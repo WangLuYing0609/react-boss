@@ -13,14 +13,26 @@ const initState = {
   type: '',
   avatar: '',
   dec: '',
-  redirectTo: ''
+  redirectTo: '',
+  pwd: ''
 }
+
+export function testSaga({ user, pwd }) {
+  return dispatch => {
+    dispatch({ type: 'testTakeEvery', payload: { user, pwd } })
+  }
+}
+
 export function user(state = initState, action) {
   switch (action.type) {
+    case 'testTakeEvery':
+      return { ...state, ...action.payload }
     case AUTH_SUCCESS:
-      return { ...state, msg: '', redirectTo: redirectRoute(action.payload), ...action.payload }
+      const authSuccess = { ...state, msg: '', redirectTo: redirectRoute(action.payload), ...action.payload }
+      return Object.assign({}, authSuccess)
     case ERRORMSG:
-      return { ...state, msg: action.msg }
+      const errorMsg = { ...state, msg: action.msg }
+      return Object.assign({}, errorMsg)
     case LOAD_DATA:
       return { ...state, redirectTo: redirectRoute(action.payload), ...action.payload }
     case LOGOUT:

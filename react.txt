@@ -40,8 +40,23 @@
         static contextType={
             ueser:propTyps.string
         }
-    5、中间件(middleware)
+    5、中间件(middleware)   
         传递多个中间件用compose合并起来
         
-
+React性能优化
+（谷歌浏览器拼？react_perf,就能检测性能）
+    1.react组件性能优化
+        属性传递优化
+            每次渲染render ，都会执行bind，构造函数只执行一次
+            不传递多余的数据
+        多组件优化
+            父组件render，子组件就会更新
+            定制shouldComponentUpdate   pureComponent
+            react建议浅层对比
+            immutable-js不变的数据结构
+        key
+            通过key进行dom树的比较
+    2.Redux性能优化
+        reselect 
+    3.React同构
 

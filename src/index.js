@@ -19,12 +19,17 @@ import Chat from './component/chat/chat'
 // applyMiddleware 处理中间件   compose将函数组合
 import { createStore, applyMiddleware, compose } from 'redux'
 
+import { defSaga } from './saga'
+// 导入redux-saga   
+import createSagaMiddleware from 'redux-saga'
+// 构建sagaMiddleware
+const sagaMiddleware = createSagaMiddleware()
 
 
 const devtools = window.devToolsExtension ? window.devToolsExtension() : f => f
-const store = createStore(combineReducers, compose(applyMiddleware(thunk), devtools))
+const store = createStore(combineReducers, compose(applyMiddleware(thunk, sagaMiddleware), devtools))
 
-
+sagaMiddleware.run(defSaga)
 
 
 

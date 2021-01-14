@@ -1,7 +1,7 @@
 import React from 'react'
 import Logo from '../../component/logo/logo'
 import { WingBlank, WhiteSpace, Button, InputItem } from 'antd-mobile'
-import { login } from '../../redux/user.redux'
+import { login, testSaga } from '../../redux/user.redux'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import imoocFrom from '../../component/imooc-form/imooc-form'
@@ -44,7 +44,7 @@ import imoocFrom from '../../component/imooc-form/imooc-form'
 
 
 @connect(
-  state => state.user, { login }
+  state => state.user, { login, testSaga }
 )
 @imoocFrom
 class Login extends React.Component {
@@ -52,6 +52,7 @@ class Login extends React.Component {
     super(props)
     this.register = this.register.bind(this)
     this.handelLogin = this.handelLogin.bind(this)
+    this.test = this.test.bind(this)
   }
   register() {
     this.props.history.push('/register')
@@ -59,6 +60,14 @@ class Login extends React.Component {
 
   handelLogin() {
     this.props.login(this.props.state)
+  }
+  test() {
+    // dispath=>{
+    //   dispath({
+    //     type: 'testTakeEvery'
+    //   })
+    // }
+    this.props.testSaga(this.props.state)
   }
   render() {
     return <div>
@@ -73,6 +82,8 @@ class Login extends React.Component {
         <Button type='primary' onClick={this.handelLogin}>登录</Button>
         <WhiteSpace></WhiteSpace>
         <Button onClick={this.register} type='primary'>注册</Button>
+        <WhiteSpace></WhiteSpace>
+        <Button onClick={this.test} type='primary'>test</Button>
       </WingBlank>
     </div>
   }
